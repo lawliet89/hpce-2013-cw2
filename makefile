@@ -45,4 +45,5 @@ bin/time_fourier_transform : src/time_fourier_transform.cpp $(FOURIER_OBJS)
 
 clean:
 	rm -f bin/test_fourier_transform bin/time_fourier_transform
-	rm -f *.o
+	rm -f src/*.o
+	rm -f src/*/*.o
