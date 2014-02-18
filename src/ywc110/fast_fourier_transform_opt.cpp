@@ -60,26 +60,36 @@ protected:
 				split2();
 			}
 
-
-			size_t K = std::min((size_t) K_SIZE, m);
-			size_t j0End = m/K;
-
-			if (m % K) {
-				++j0End;
-			}
-
-			tbb::parallel_for(size_t(0), j0End, [=](size_t j0) {
-				size_t j = j0 * K;
-				std::complex<double> w = std::pow(wn, j);
-
-				for (size_t j1 = 0; j1 < K && j < m; ++j1, ++j) {
-					std::complex<double> t1 = w*pOut[m+j];
-					std::complex<double> t2 = pOut[j]-t1;
-					pOut[j] = pOut[j]+t1;        /*  pOut[j] = pOut[j] + w^i pOut[m+j] */
-					pOut[j+m] = t2;              /*  pOut[j] = pOut[j] - w^i pOut[m+j] */
-			  		w = w*wn;
+			if (m < K_SIZE) {
+				std::complex<double> w(1.0, 0.0);
+				for (size_t j=0;j<m;j++){
+				  std::complex<double> t1 = w*pOut[m+j];
+				  std::complex<double> t2 = pOut[j]-t1;
+				  pOut[j] = pOut[j]+t1;                 /*  pOut[j] = pOut[j] + w^i pOut[m+j] */
+				  pOut[j+m] = t2;                          /*  pOut[j] = pOut[j] - w^i pOut[m+j] */
+				  w = w*wn;
 				}
-			});
+			} else {
+				size_t K = K_SIZE;
+				size_t j0End = m/K;
+
+				if (m % K) {
+					++j0End;
+				}
+
+				tbb::parallel_for(size_t(0), j0End, [=](size_t j0) {
+					size_t j = j0 * K;
+					std::complex<double> w = std::pow(wn, j);
+
+					for (size_t j1 = 0; j1 < K && j < m; ++j1, ++j) {
+						std::complex<double> t1 = w*pOut[m+j];
+						std::complex<double> t2 = pOut[j]-t1;
+						pOut[j] = pOut[j]+t1;        /*  pOut[j] = pOut[j] + w^i pOut[m+j] */
+						pOut[j+m] = t2;              /*  pOut[j] = pOut[j] - w^i pOut[m+j] */
+				  		w = w*wn;
+					}
+				});
+			}
 		}
 	}
 
