@@ -5,6 +5,9 @@
 #include <cmath>
 #include <cassert>
 
+#define SPLIT_THRESHOLD 32
+#define K_SIZE 8
+
 namespace hpce
 {
 namespace ywc110
@@ -42,15 +45,23 @@ protected:
 		}else{
 			size_t m = n/2;
 
-			tbb::task_group group;
-
-			group.run( [=](){ forwards_impl(m,wn*wn,pIn,2*sIn,pOut,sOut); });
-			group.run( [=](){
+			auto split1 = [=](){ forwards_impl(m,wn*wn,pIn,2*sIn,pOut,sOut); };
+			auto split2 = [=](){
 				forwards_impl(m,wn*wn,pIn+sIn,2*sIn,pOut+sOut*m,sOut);
-			});
-			group.wait();
+			};
 
-			size_t K = std::min((size_t) 8, m);
+			if (m > SPLIT_THRESHOLD) {
+				tbb::task_group group;
+				group.run(split1);
+				group.run(split2);
+				group.wait();
+			} else {
+				split1();
+				split2();
+			}
+
+
+			size_t K = std::min((size_t) K_SIZE, m);
 			size_t j0End = m/K;
 
 			if (m % K) {
@@ -64,8 +75,8 @@ protected:
 				for (size_t j1 = 0; j1 < K && j < m; ++j1, ++j) {
 					std::complex<double> t1 = w*pOut[m+j];
 					std::complex<double> t2 = pOut[j]-t1;
-					pOut[j] = pOut[j]+t1;                 /*  pOut[j] = pOut[j] + w^i pOut[m+j] */
-					pOut[j+m] = t2;                          /*  pOut[j] = pOut[j] - w^i pOut[m+j] */
+					pOut[j] = pOut[j]+t1;        /*  pOut[j] = pOut[j] + w^i pOut[m+j] */
+					pOut[j+m] = t2;              /*  pOut[j] = pOut[j] - w^i pOut[m+j] */
 			  		w = w*wn;
 				}
 			});
