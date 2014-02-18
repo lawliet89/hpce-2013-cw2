@@ -7,7 +7,7 @@ namespace hpce
 {
 namespace ywc110
 {
-class direct_fourier_transform
+class direct_fourier_transform_parfor
 	: public fourier_transform
 {
 protected:
@@ -67,15 +67,15 @@ protected:
 
 public:
 	virtual std::string name() const
-	{ return "hpce.direct_fourier_transform"; }
+	{ return "hpce.ywc110.direct_fourier_transform_parfor"; }
 
 	virtual bool is_quadratic() const
 	{ return true; }
 };
 
-std::shared_ptr<fourier_transform> Create_direct_fourier_transform()
+std::shared_ptr<fourier_transform> Create_direct_fourier_transform_parfor()
 {
-	return std::make_shared<direct_fourier_transform>();
+	return std::make_shared<direct_fourier_transform_parfor>();
 }
-}; //namespace ywc110
+}; // namespace ywc110
 }; // namespace hpce
