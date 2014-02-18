@@ -23,7 +23,8 @@ CPPFLAGS += -O2
 FOURIER_CORE_OBJS = src/fourier_transform.o src/fourier_transform_register_factories.o
 
 # implementations
-FOURIER_IMPLEMENTATION_OBJS =  src/fast_fourier_transform.o	src/direct_fourier_transform.o
+FOURIER_IMPLEMENTATION_OBJS =  src/fast_fourier_transform.o	src/direct_fourier_transform.o\
+	src/ywc110/direct_fourier_transform.o
 
 FOURIER_OBJS = $(FOURIER_CORE_OBJS) $(FOURIER_IMPLEMENTATION_OBJS)
 
@@ -39,3 +40,4 @@ bin/time_fourier_transform : src/time_fourier_transform.cpp $(FOURIER_OBJS)
 
 clean:
 	rm -f bin/test_fourier_transform bin/time_fourier_transform
+	rm -f *.o
