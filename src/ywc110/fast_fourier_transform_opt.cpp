@@ -5,8 +5,8 @@
 #include <cmath>
 #include <cassert>
 
-#define SPLIT_THRESHOLD 32
-#define K_SIZE 8
+#define SPLIT_THRESHOLD 1024
+#define K_SIZE 1024
 
 namespace hpce
 {
@@ -50,7 +50,7 @@ protected:
 				forwards_impl(m,wn*wn,pIn+sIn,2*sIn,pOut+sOut*m,sOut);
 			};
 
-			if (m > SPLIT_THRESHOLD) {
+			if (m >= SPLIT_THRESHOLD) {
 				tbb::task_group group;
 				group.run(split1);
 				group.run(split2);
