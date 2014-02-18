@@ -9,6 +9,7 @@ std::shared_ptr<fourier_transform> Create_direct_fourier_transform();
 namespace ywc110{
 	std::shared_ptr<fourier_transform> Create_direct_fourier_transform_parfor();
 	std::shared_ptr<fourier_transform> Create_fast_fourier_transform_taskgroup();
+	std::shared_ptr<fourier_transform> Create_fast_fourier_transform_parfor();
 }
 
 
@@ -21,9 +22,10 @@ void fourier_transform::RegisterDefaultFactories()
 
 	RegisterTransformFactory("hpce.ywc110.direct_fourier_transform_parfor",
 		hpce::ywc110::Create_direct_fourier_transform_parfor);
-
 	RegisterTransformFactory("hpce.ywc110.fast_fourier_transform_taskgroup",
 		hpce::ywc110::Create_fast_fourier_transform_taskgroup);
+	RegisterTransformFactory("hpce.ywc110.fast_fourier_transform_parfor",
+		hpce::ywc110::Create_fast_fourier_transform_parfor);
 }
 
 }; // namespace hpce

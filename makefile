@@ -24,7 +24,8 @@ FOURIER_CORE_OBJS = src/fourier_transform.o src/fourier_transform_register_facto
 
 # implementations
 FOURIER_IMPLEMENTATION_OBJS =  src/fast_fourier_transform.o	src/direct_fourier_transform.o\
-	src/ywc110/direct_fourier_transform_parfor.o src/ywc110/fast_fourier_transform_taskgroup.o
+	src/ywc110/direct_fourier_transform_parfor.o src/ywc110/fast_fourier_transform_taskgroup.o\
+	src/ywc110/fast_fourier_transform_parfor.o
 
 FOURIER_OBJS = $(FOURIER_CORE_OBJS) $(FOURIER_IMPLEMENTATION_OBJS)
 
