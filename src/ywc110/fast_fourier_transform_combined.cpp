@@ -1,5 +1,6 @@
 #include "fourier_transform.hpp"
 #include "tbb/parallel_for.h"
+#include "tbb/task_group.h"
 
 #include <cmath>
 #include <cassert>
@@ -8,7 +9,7 @@ namespace hpce
 {
 namespace ywc110
 {
-class fast_fourier_transform_parfor
+class fast_fourier_transform_combined
 	: public fourier_transform
 {
 protected:
@@ -41,8 +42,13 @@ protected:
 		}else{
 			size_t m = n/2;
 
-			forwards_impl(m,wn*wn,pIn,2*sIn,pOut,sOut);
-			forwards_impl(m,wn*wn,pIn+sIn,2*sIn,pOut+sOut*m,sOut);
+			tbb::task_group group;
+
+			group.run( [=](){ forwards_impl(m,wn*wn,pIn,2*sIn,pOut,sOut); });
+			group.run( [=](){
+				forwards_impl(m,wn*wn,pIn+sIn,2*sIn,pOut+sOut*m,sOut);
+			});
+			group.wait();
 
 			size_t K = std::min((size_t) 8, m);
 			size_t j0End = m/K;
@@ -83,15 +89,15 @@ protected:
 
 public:
 	virtual std::string name() const
-	{ return "hpce.ywc110.fast_fourier_transform_parfor"; }
+	{ return "hpce.ywc110.fast_fourier_transform_combined"; }
 
 	virtual bool is_quadratic() const
 	{ return false; }
 };
 
-std::shared_ptr<fourier_transform> Create_fast_fourier_transform_parfor()
+std::shared_ptr<fourier_transform> Create_fast_fourier_transform_combined()
 {
-	return std::make_shared<fast_fourier_transform_parfor>();
+	return std::make_shared<fast_fourier_transform_combined>();
 }
 
 }; // namespace ywc110
