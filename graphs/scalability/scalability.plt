@@ -1,5 +1,5 @@
 reset
-set term pdfcairo
+set term pdfcairo size 29.7cm, 21cm
 set output "ywc110_scalability.pdf"
 set key left box
 set title "Comparison of Execution Times of FFT Optimised with Varying Processors\nUbuntu 13.10; Intel Core i5-2500 (4 physical/logical Cores)"

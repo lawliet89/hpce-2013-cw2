@@ -1,5 +1,5 @@
 reset
-set term pdfcairo
+set term pdfcairo size 29.7cm, 21cm
 set output "ywc110_speedup.pdf"
 set key left box
 set title "Comparison of Execution Times for Various Implementations\nUbuntu 13.10; Intel Core i5-2500 (4 physical/logical Cores)"
