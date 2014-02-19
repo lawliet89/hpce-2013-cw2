@@ -1,0 +1,9 @@
+#!/bin/bash
+timer=../../bin/time_fourier_transform
+maxTime=15
+
+for P in {1..4}; do
+	echo $P
+	$timer hpce.ywc110.fast_fourier_transform_opt $P $maxTime > "fft_opt_$P.txt"
+done
+echo "Done"
