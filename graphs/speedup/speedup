@@ -1,0 +1,27 @@
+#!/bin/bash
+timer=../../bin/time_fourier_transform
+maxTime=15
+P=4
+
+echo "Timing DFT"
+$timer hpce.direct_fourier_transform $P $maxTime > dft.txt
+
+echo "Timing FFT"
+$timer hpce.fast_fourier_transform $P $maxTime > fft.txt
+
+echo "Timing DFT Parfor"
+$timer hpce.ywc110.direct_fourier_transform_parfor $P $maxTime > dft_parfor.txt
+
+echo "Timing FFT Taskgroup"
+$timer hpce.ywc110.fast_fourier_transform_taskgroup $P $maxTime > fft_taskgroup.txt
+
+echo "Timing FFT Parfor"
+$timer hpce.ywc110.fast_fourier_transform_parfor $P $maxTime > fft_parfor.txt
+
+echo "Timing FFT Combined"
+$timer hpce.ywc110.fast_fourier_transform_combined $P $maxTime > fft_combined.txt
+
+echo "Timing FFT Optimised"
+$timer hpce.ywc110.fast_fourier_transform_opt $P $maxTime > fft_opt.txt
+
+echo "Done"
